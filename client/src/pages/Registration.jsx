@@ -13,17 +13,19 @@ function Registration() {
   async function handleSubmit(e) {
     e.preventDefault();
     if (!agreed) {
-      setErrorMessage("You have click 'I agree' to continue");
+      setErrorMessage("You have to click 'I agree' to continue");
       return;
     }
     try {
-      const respose = await axios.post(`${API_URL}/registration`, {
-        name,
+      const respose = await axios.post(`${API_URL}/auth/register`, {
+        username: name,
         email,
         password,
       });
+      console.log(respose);
       if (respose.status === 201) {
-        navigate("/");
+        localStorage.setItem("token", respose.data.token);
+        navigate("/dashboard");
       }
     } catch (error) {
       console.log(error);
@@ -84,7 +86,10 @@ function Registration() {
                   I agree to the Terms of Service and Privacy Policy
                 </label>
               </div>
-              <button className="w-full mt-2 px-3 py-3 rounded-xl bg-bluebutton font-bold text-white">
+              <button
+                type="Submit"
+                className="w-full mt-2 px-3 py-3 rounded-xl bg-bluebutton font-bold text-white"
+              >
                 Sign up
               </button>
             </form>
