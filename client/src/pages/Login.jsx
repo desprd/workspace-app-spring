@@ -2,28 +2,17 @@ import axios from "axios";
 import React, { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 
-function Registration() {
+function Login() {
   const API_URL = import.meta.env.VITE_API_URL;
   const [errorMessage, setErrorMessage] = useState("");
   const [name, setName] = useState("");
-  const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
-  const [agreed, setAgreed] = useState(false);
   const navigate = useNavigate();
   async function handleSubmit(e) {
     e.preventDefault();
-    if (!agreed) {
-      setErrorMessage("You have to click 'I agree' to continue");
-      return;
-    }
-    if (password.length < 6) {
-      setErrorMessage("Password supposed to be at least 6 characters long");
-      return;
-    }
     try {
-      const response = await axios.post(`${API_URL}/auth/register`, {
+      const response = await axios.post(`${API_URL}/auth/login`, {
         username: name,
-        email,
         password,
       });
       console.log(response);
@@ -42,7 +31,7 @@ function Registration() {
     <div>
       <div className="min-h-screen">
         <div className="flex justify-center">
-          <h1 className="mt-15 mb-10 font-bold text-3xl">Create an account</h1>
+          <h1 className="mt-15 mb-10 font-bold text-3xl">Sign in</h1>
         </div>
         <div className="grid grid-cols-3">
           <div className="ml-30">
@@ -63,18 +52,6 @@ function Registration() {
                   type="text"
                 />
               </div>
-
-              <div>
-                <label className="" htmlFor="username">
-                  Your email
-                </label>
-                <input
-                  value={email}
-                  onChange={(e) => setEmail(e.target.value)}
-                  className="w-full mt-2 px-3 py-3 rounded-xl bg-lightgray"
-                  type="email"
-                />
-              </div>
               <div>
                 <label className="" htmlFor="username">
                   Password
@@ -86,32 +63,20 @@ function Registration() {
                   type="password"
                 />
               </div>
-              <div className="">
-                <input
-                  type="checkbox"
-                  id="agree"
-                  checked={agreed}
-                  onChange={(e) => setAgreed(e.target.checked)}
-                  className="mr-2"
-                />
-                <label htmlFor="agree">
-                  I agree to the Terms of Service and Privacy Policy
-                </label>
-              </div>
               <button
                 type="Submit"
                 className="w-full mt-2 px-3 py-3 rounded-xl bg-bluebutton font-bold text-white cursor-pointer"
               >
-                Sign up
+                Sign in
               </button>
             </form>
           </div>
         </div>
         <div className="flex justify-center">
-          <div className="mt-15 flex flex-col gap-5">
-            <p className="text-graytext">Already have an account?</p>
-            <Link to="/login" className="self-center text-graytext">
-              Sign in
+          <div className="mt-50 flex flex-col gap-5">
+            <p className="text-graytext">Don't have an account yet?</p>
+            <Link to="/registration" className="self-center text-graytext">
+              Sign up
             </Link>
           </div>
         </div>
@@ -120,4 +85,4 @@ function Registration() {
   );
 }
 
-export default Registration;
+export default Login;

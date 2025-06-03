@@ -44,12 +44,16 @@ public class AuthenticationService {
     }
 
     public UserAuthDTO login(LoginRequestDTO req){
-        authenticationManager.authenticate(
-                new UsernamePasswordAuthenticationToken(
-                        req.getUsername(),
-                        req.getPassword()
-                )
-        );
+        try {
+            authenticationManager.authenticate(
+                    new UsernamePasswordAuthenticationToken(
+                            req.getUsername(),
+                            req.getPassword()
+                    )
+            );
+        }catch (Exception e){
+            throw new RuntimeException("Username or password are incorrect");
+        }
         var user = repository.findByUsername(req.getUsername()).orElseThrow(() -> new UsernameNotFoundException("User with such username was not found"));
         var token = jwtService.generateToken(new UserPrinciple(user));
         return UserAuthDTO

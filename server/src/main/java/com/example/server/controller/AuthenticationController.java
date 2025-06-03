@@ -22,7 +22,7 @@ public class AuthenticationController {
             UserAuthDTO res = service.register(req);
             return new ResponseEntity<>(res, HttpStatus.CREATED);
         }catch (Exception e){
-            return new ResponseEntity<>(e.getMessage(), HttpStatus.CREATED);
+            return new ResponseEntity<>(e.getMessage(), HttpStatus.BAD_REQUEST);
         }
 
     }
@@ -33,7 +33,7 @@ public class AuthenticationController {
             UserAuthDTO res = service.login(req);
             return new ResponseEntity<>(res, HttpStatus.CREATED);
         }catch (Exception e){
-            return new ResponseEntity<>(e.getMessage(), HttpStatus.OK);
+            return new ResponseEntity<>(e.getMessage(), HttpStatus.BAD_REQUEST);
         }
     }
 
