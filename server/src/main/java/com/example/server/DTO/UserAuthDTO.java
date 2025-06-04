@@ -12,5 +12,7 @@ import lombok.NoArgsConstructor;
 public class UserAuthDTO {
     private String token;
     private String username;
-    private String email;
+    public UserAuthDTO(String username){
+        this.username = username;
+    }
 }

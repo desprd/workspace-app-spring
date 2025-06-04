@@ -1,6 +1,7 @@
 import axios from "axios";
 import React, { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
+import { useAuth } from "../context/ContextProvider";
 
 function Login() {
   const API_URL = import.meta.env.VITE_API_URL;
@@ -8,6 +9,7 @@ function Login() {
   const [name, setName] = useState("");
   const [password, setPassword] = useState("");
   const navigate = useNavigate();
+  const { login } = useAuth();
   async function handleSubmit(e) {
     e.preventDefault();
     try {
@@ -16,8 +18,9 @@ function Login() {
         password,
       });
       console.log(response);
-      if (response.status === 201) {
+      if (response.status === 200) {
         localStorage.setItem("token", response.data.token);
+        login(response.data.username);
         navigate("/dashboard");
       } else {
         setErrorMessage(response);

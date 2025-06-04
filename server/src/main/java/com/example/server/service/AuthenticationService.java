@@ -3,6 +3,7 @@ package com.example.server.service;
 import com.example.server.DTO.LoginRequestDTO;
 import com.example.server.DTO.RegistrationRequestDTO;
 import com.example.server.DTO.UserAuthDTO;
+import com.example.server.config.JwtAuthenticationFilter;
 import com.example.server.model.Role;
 import com.example.server.model.User;
 import com.example.server.model.UserPrinciple;
@@ -39,7 +40,6 @@ public class AuthenticationService {
                 .builder()
                 .token(token)
                 .username(username)
-                .email(email)
                 .build();
     }
 
@@ -60,7 +60,7 @@ public class AuthenticationService {
                 .builder()
                 .token(token)
                 .username(user.getUsername())
-                .email(user.getEmail())
                 .build();
     }
+
 }
