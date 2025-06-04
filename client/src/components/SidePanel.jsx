@@ -23,8 +23,16 @@ function SidePanel({ pageName }) {
             buttonName={"Notes"}
             leadTo={"/notes"}
           />
-          <SidePanelButton pageName={pageName} buttonName={"Profile"} />
-          <SidePanelButton pageName={pageName} buttonName={"Settings"} />
+          <SidePanelButton
+            pageName={pageName}
+            buttonName={"Profile"}
+            leadTo={"/profile"}
+          />
+          <SidePanelButton
+            pageName={pageName}
+            buttonName={"Settings"}
+            leadTo={"/settings"}
+          />
         </div>
         <div className="mt-auto mb-35">
           <LogOutButton />
