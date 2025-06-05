@@ -29,7 +29,9 @@ public class ProfileInformationService {
         user.setEmail(req.getEmail());
         user.getProfile().setCompanyName(req.getCompanyName());
         user.getProfile().setJobTitle(req.getJobTitle());
-        user.getProfile().setProfilePictureURL(cloudinaryService.uploadFile(req.getProfilePictureFile(), "workspace-app/profile-pictures"));
+        if (req.getProfilePictureFile() != null && !req.getProfilePictureFile().isEmpty()){
+            user.getProfile().setProfilePictureURL(cloudinaryService.uploadFile(req.getProfilePictureFile(), "workspace-app/profile-pictures"));
+        }
         repository.save(user);
         return getProfileDTO(user);
     }

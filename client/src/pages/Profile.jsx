@@ -7,6 +7,7 @@ function Profile() {
   const API_URL = import.meta.env.VITE_API_URL;
   const token = localStorage.getItem("token");
   const { username } = useAuth();
+  const [errorMessage, setErrorMessage] = useState("");
   const [name, setName] = useState("");
   const [jobTitle, setJobTitle] = useState("");
   const [email, setEmail] = useState("");
@@ -53,6 +54,36 @@ function Profile() {
       reader.readAsDataURL(e.target.files[0]);
     }
   }
+  async function handleSubmit(e) {
+    e.preventDefault();
+    try {
+      const formData = new FormData();
+      formData.append("email", email);
+      formData.append("jobTitle", jobTitle);
+      formData.append("companyName", company);
+      if (imageFile != null) {
+        formData.append("profilePictureFile", imageFile);
+      }
+
+      const response = await axios.put(`${API_URL}/profile/update`, formData, {
+        headers: {
+          Authorization: `Bearer ${token}`,
+          "Content-Type": "multipart/form-data",
+        },
+      });
+      console.log(response.data);
+      if (response.status == 200) {
+        setErrorMessage("");
+        fetchData();
+      } else {
+        setErrorMessage(response.data);
+        console.log("Data updating failed with " + response.status);
+      }
+    } catch (error) {
+      setErrorMessage(error.response.data);
+      console.log("Error " + error.response.data);
+    }
+  }
   useEffect(() => {
     fetchData();
   }, []);
@@ -74,7 +105,12 @@ function Profile() {
               </div>
             </div>
 
-            <form className="flex flex-col gap-6">
+            <form onSubmit={handleSubmit} className="flex flex-col gap-6">
+              {errorMessage && (
+                <div className="text-red-600 text-[17px] text-center mb-5">
+                  {errorMessage}
+                </div>
+              )}
               <div>
                 <label className="" htmlFor="username">
                   Choose image
@@ -93,8 +129,8 @@ function Profile() {
                 </label>
                 <input
                   value={name}
-                  onChange={(e) => setName(e.target.value)}
-                  className="w-full mt-2 px-3 py-3 rounded-xl bg-lightgray"
+                  readOnly
+                  className=" w-full mt-2 px-3 py-3 rounded-xl bg-lightgray "
                   type="text"
                 />
               </div>
@@ -128,7 +164,7 @@ function Profile() {
                   value={company}
                   onChange={(e) => setCompany(e.target.value)}
                   className="w-full mt-2 px-3 py-3 rounded-xl bg-lightgray"
-                  type="Email"
+                  type=""
                 />
               </div>
               <button
