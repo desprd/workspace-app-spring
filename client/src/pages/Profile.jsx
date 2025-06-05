@@ -1,13 +1,61 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import SidePanel from "../components/SidePanel";
 import { useAuth } from "../context/ContextProvider";
+import axios from "axios";
 
 function Profile() {
+  const API_URL = import.meta.env.VITE_API_URL;
+  const token = localStorage.getItem("token");
   const { username } = useAuth();
-  const [name, setName] = useState();
-  const [jobTitle, setJobTitle] = useState();
-  const [email, setEmail] = useState();
-  const [company, setCompany] = useState();
+  const [name, setName] = useState("");
+  const [jobTitle, setJobTitle] = useState("");
+  const [email, setEmail] = useState("");
+  const [company, setCompany] = useState("");
+  const [imageURL, setImageURL] = useState("");
+  const [imageFile, setImageFile] = useState(null);
+  async function fetchData() {
+    try {
+      const response = await axios.get(`${API_URL}/profile/information`, {
+        headers: { Authorization: `Bearer ${token}` },
+      });
+      console.log(response.data);
+      if (response.status == 200) {
+        setName(response.data.username != null ? response.data.username : "");
+        setJobTitle(
+          response.data.jobTitle != null ? response.data.jobTitle : ""
+        );
+        setEmail(response.data.email != null ? response.data.email : "");
+        setCompany(
+          response.data.companyName != null ? response.data.companyName : ""
+        );
+        setImageURL(
+          response.data.profilePictureURL != null
+            ? response.data.profilePictureURL
+            : ""
+        );
+      } else {
+        console.log(
+          "Something went wrong while fetching data" + response.status
+        );
+      }
+    } catch (error) {
+      console.log("Erorr" + error);
+    }
+  }
+
+  function handleImageChange(e) {
+    if (e.target.files && e.target.files[0]) {
+      setImageFile(e.target.files[0]);
+      const reader = new FileReader();
+      reader.onloadend = () => {
+        setImageURL(reader.result);
+      };
+      reader.readAsDataURL(e.target.files[0]);
+    }
+  }
+  useEffect(() => {
+    fetchData();
+  }, []);
 
   return (
     <div>
@@ -17,12 +65,11 @@ function Profile() {
           <div>
             <h1 className="text-3xl font-extrabold mb-10">Your Profile</h1>
             <div className="flex flex-row gap-5 mb-6">
-              <img className="w-30 h-30 rounded-full" src="/user.png" alt="" />
+              <img className="w-30 h-30 rounded-full" src={imageURL} alt="" />
               <div className="flex flex-col justify-center ">
                 <p className="text-xl font-bold">{username}</p>
                 <p className="text-graytext italic">
-                  Java senior developer at Amazon
-                  {/* TODO change on custom value */}
+                  {jobTitle} | {company}
                 </p>
               </div>
             </div>
@@ -33,6 +80,7 @@ function Profile() {
                   Choose image
                 </label>
                 <input
+                  onChange={handleImageChange}
                   title="Choose image"
                   type="file"
                   accept="image/*"
@@ -44,6 +92,8 @@ function Profile() {
                   Username
                 </label>
                 <input
+                  value={name}
+                  onChange={(e) => setName(e.target.value)}
                   className="w-full mt-2 px-3 py-3 rounded-xl bg-lightgray"
                   type="text"
                 />
@@ -53,6 +103,8 @@ function Profile() {
                   Email
                 </label>
                 <input
+                  value={email}
+                  onChange={(e) => setEmail(e.target.value)}
                   className="w-full mt-2 px-3 py-3 rounded-xl bg-lightgray"
                   type="Email"
                 />
@@ -62,6 +114,8 @@ function Profile() {
                   Job Title
                 </label>
                 <input
+                  value={jobTitle}
+                  onChange={(e) => setJobTitle(e.target.value)}
                   className="w-full mt-2 px-3 py-3 rounded-xl bg-lightgray"
                   type=""
                 />
@@ -71,6 +125,8 @@ function Profile() {
                   Company
                 </label>
                 <input
+                  value={company}
+                  onChange={(e) => setCompany(e.target.value)}
                   className="w-full mt-2 px-3 py-3 rounded-xl bg-lightgray"
                   type="Email"
                 />

@@ -4,9 +4,11 @@ import com.example.server.DTO.LoginRequestDTO;
 import com.example.server.DTO.RegistrationRequestDTO;
 import com.example.server.DTO.UserAuthDTO;
 import com.example.server.config.JwtAuthenticationFilter;
+import com.example.server.model.Profile;
 import com.example.server.model.Role;
 import com.example.server.model.User;
 import com.example.server.model.UserPrinciple;
+import com.example.server.repository.ProfileRepository;
 import com.example.server.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -34,6 +36,13 @@ public class AuthenticationService {
                 .password(encoder.encode(req.getPassword()))
                 .role(Role.USER)
                 .build();
+        var profile = Profile.builder()
+                        .companyName(null)
+                        .jobTitle(null)
+                        .profilePictureURL("https://res.cloudinary.com/diha4exbb/image/upload/v1749071901/user_ubtddi.png")
+                        .user(user)
+                        .build();
+        user.setProfile(profile);
         repository.save(user);
         var token = jwtService.generateToken(new UserPrinciple(user));
         return UserAuthDTO
