@@ -23,12 +23,10 @@ public class Note {
     private Integer id;
     @NotNull
     private String title;
-    @NotNull
     private String content;
     @NotNull
     @Enumerated(EnumType.STRING)
     private Status status;
-    @NotNull
     @UpdateTimestamp
     private LocalDate createdOn;
     @ManyToOne

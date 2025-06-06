@@ -1,8 +1,15 @@
-import React from "react";
+import React, { useState } from "react";
 import SidePanel from "../components/SidePanel";
 import NoteForm from "../components/NoteForm";
+import { useNavigate } from "react-router-dom";
 
 function Notes() {
+  const navigate = useNavigate();
+  const [isFormOpen, setIsFormOpen] = useState(false);
+  const [notes, setNotes] = useState([]);
+  function closeForm() {
+    setIsFormOpen(false);
+  }
   return (
     <div>
       <div className="grid grid-cols-[25%_75%] min-h-screen gap-50">
@@ -10,7 +17,10 @@ function Notes() {
         <div className="mt-15 flex flex-col gap-10 pr-80">
           <div className="flex justify-between items-center">
             <h1 className="text-3xl font-extrabold">Notes</h1>
-            <button className="bg-lightgray px-12 py-2 rounded-2xl">
+            <button
+              onClick={() => setIsFormOpen(true)}
+              className="bg-lightgray px-12 py-2 rounded-2xl cursor-pointer"
+            >
               New note
             </button>
           </div>
@@ -28,7 +38,7 @@ function Notes() {
           </div>
         </div>
       </div>
-      <NoteForm />
+      {isFormOpen && <NoteForm closeForm={closeForm} />}
     </div>
   );
 }
