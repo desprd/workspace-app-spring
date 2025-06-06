@@ -62,7 +62,7 @@ function Registration() {
                 <input
                   value={name}
                   onChange={(e) => setName(e.target.value)}
-                  className="w-full mt-2 px-3 py-3 rounded-xl bg-lightgray"
+                  className="focus:outline-none w-full mt-2 px-3 py-3 rounded-xl bg-lightgray"
                   type="text"
                 />
               </div>
@@ -74,7 +74,7 @@ function Registration() {
                 <input
                   value={email}
                   onChange={(e) => setEmail(e.target.value)}
-                  className="w-full mt-2 px-3 py-3 rounded-xl bg-lightgray"
+                  className="focus:outline-none w-full mt-2 px-3 py-3 rounded-xl bg-lightgray"
                   type="email"
                 />
               </div>
@@ -85,7 +85,7 @@ function Registration() {
                 <input
                   value={password}
                   onChange={(e) => setPassword(e.target.value)}
-                  className="w-full mt-2 px-3 py-3 rounded-xl bg-lightgray"
+                  className="focus:outline-none w-full mt-2 px-3 py-3 rounded-xl bg-lightgray"
                   type="password"
                 />
               </div>
