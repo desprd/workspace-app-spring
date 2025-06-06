@@ -1,5 +1,6 @@
 import React from "react";
 import SidePanel from "../components/SidePanel";
+import NoteForm from "../components/NoteForm";
 
 function Notes() {
   return (
@@ -27,6 +28,7 @@ function Notes() {
           </div>
         </div>
       </div>
+      <NoteForm />
     </div>
   );
 }
