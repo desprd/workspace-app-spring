@@ -1,11 +1,11 @@
 import axios from "axios";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 
-function NoteForm({ closeForm }) {
+function NoteForm({ closeForm, fetchNotes, defaultTitle }) {
   const token = localStorage.getItem("token");
   const [errorMessage, setErrorMessage] = useState("");
   const API_URL = import.meta.env.VITE_API_URL;
-  const [noteTitle, setNoteTitle] = useState("New Note");
+  const [noteTitle, setNoteTitle] = useState(defaultTitle);
   const [content, setContent] = useState("");
   async function sendNote(e) {
     e.preventDefault();
@@ -27,6 +27,7 @@ function NoteForm({ closeForm }) {
       console.log(response.data);
       if (response.status == 201) {
         closeForm();
+        fetchNotes();
       } else {
         console.log("Failed to post note " + response.data);
         setErrorMessage(response.data);
