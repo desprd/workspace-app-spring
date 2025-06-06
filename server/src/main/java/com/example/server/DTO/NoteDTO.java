@@ -11,7 +11,9 @@ import lombok.NoArgsConstructor;
 @Builder
 @NoArgsConstructor
 public class NoteDTO {
+    private Integer id;
     private String title;
     private String content;
     private Status status;
+    private String howLongAgoCreated;
 }

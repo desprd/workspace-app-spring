@@ -35,9 +35,13 @@ function Notes() {
   async function checkAsDone(note) {
     const id = note.id;
     try {
-      const response = await axios.put(`${API_URL}/note/get/${id}`, {
-        headers: { Authorization: `Bearer ${token}` },
-      });
+      const response = await axios.put(
+        `${API_URL}/note/get/${id}`,
+        {},
+        {
+          headers: { Authorization: `Bearer ${token}` },
+        }
+      );
       console.log(response.data);
       if (response.status === 200) {
         fetchNotes();
