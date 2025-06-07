@@ -1,8 +1,10 @@
 package com.example.server.controller;
 
 import com.example.server.DTO.LoginRequestDTO;
+import com.example.server.DTO.PreferencesDTO;
 import com.example.server.DTO.RegistrationRequestDTO;
 import com.example.server.DTO.UserAuthDTO;
+import com.example.server.model.User;
 import com.example.server.service.AuthenticationService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -42,8 +44,9 @@ public class AuthenticationController {
     @GetMapping("/verify")
     public ResponseEntity<?> verify(Authentication authentication) {
         try {
-            UserDetails user = (UserDetails) authentication.getPrincipal();
-            return ResponseEntity.ok(new UserAuthDTO(user.getUsername())); // or include email if needed
+            User userModel = service.getUser(authentication);
+            PreferencesDTO preferencesDTO = service.getPreferencesDTO(userModel.getPreferences());
+            return ResponseEntity.ok(UserAuthDTO.builder().username(userModel.getUsername()).preferences(preferencesDTO).build()); // or include email if needed
         } catch (Exception e) {
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Invalid token");
         }
