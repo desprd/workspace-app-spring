@@ -1,15 +1,19 @@
 import React from "react";
 
-function NoteCard({ note, checkAsDone }) {
+function NoteCard({ note, checkAsDone, deleteNote, openNoteDetails }) {
   function handleIsDone(e) {
     e.stopPropagation();
     checkAsDone(note);
+  }
+  function handleDelete(e) {
+    e.stopPropagation();
+    deleteNote(note);
   }
   return (
     <div>
       <div className="px-5 py-4">
         <div
-          onClick={() => console.log("Container clicked")}
+          onClick={() => openNoteDetails(note)}
           className=" cursor-pointer flex justify-between items-center px-5 py-4"
         >
           <div className="flex gap-5">
@@ -35,7 +39,7 @@ function NoteCard({ note, checkAsDone }) {
           ) : (
             <button>
               <img
-                onClick={() => console.log("Tick clicked")}
+                onClick={handleDelete}
                 className="w-7 h-7 cursor-pointer"
                 src="cross.png"
                 alt=""

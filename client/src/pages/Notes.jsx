@@ -3,6 +3,7 @@ import SidePanel from "../components/SidePanel";
 import NoteForm from "../components/NoteForm";
 import axios from "axios";
 import NoteCard from "../components/NoteCard";
+import NoteDetails from "../components/NoteDetails";
 
 function Notes() {
   const API_URL = import.meta.env.VITE_API_URL;
@@ -11,8 +12,41 @@ function Notes() {
   const [isFormOpen, setIsFormOpen] = useState(false);
   const [notes, setNotes] = useState([]);
   const [defaultTitle, setDefaultTitle] = useState("");
+  const [isNoteDetailsOpen, setIsNoteDetailsOpen] = useState(false);
+  const [noteToOpen, setNoteToOpen] = useState(null);
   function closeForm() {
     setIsFormOpen(false);
+  }
+  function openNoteDetails(note) {
+    setIsNoteDetailsOpen(true);
+    setNoteToOpen(note);
+  }
+  function closeNoteDetails() {
+    setIsNoteDetailsOpen(false);
+  }
+  async function updateNote(note, noteTitle, content) {
+    const id = note.id;
+    try {
+      const response = await axios.put(
+        `${API_URL}/note/update/${id}`,
+        {
+          title: noteTitle,
+          content,
+        },
+        {
+          headers: { Authorization: `Bearer ${token}` },
+        }
+      );
+      if (response.status === 200) {
+        console.log("Note updated successfully");
+        fetchNotes();
+        setIsNoteDetailsOpen(false);
+      } else {
+        console.log("Failed to update the notes " + response.data);
+      }
+    } catch (error) {
+      console.log("Error " + error);
+    }
   }
   async function fetchNotes() {
     try {
@@ -52,6 +86,22 @@ function Notes() {
       console.log("Error " + error);
     }
   }
+  async function deleteNote(note) {
+    const id = note.id;
+    try {
+      const response = await axios.delete(`${API_URL}/note/delete/${id}`, {
+        headers: { Authorization: `Bearer ${token}` },
+      });
+      if (response.status === 200) {
+        console.log("Note removed successfully");
+        fetchNotes();
+      } else {
+        console.log("Failed to remove the note " + response.data);
+      }
+    } catch (error) {
+      console.log("Error " + error);
+    }
+  }
   useEffect(() => {
     fetchNotes();
   }, []);
@@ -83,10 +133,22 @@ function Notes() {
             />
           </div>
           {notes.map((note) => (
-            <NoteCard note={note} checkAsDone={checkAsDone} />
+            <NoteCard
+              note={note}
+              checkAsDone={checkAsDone}
+              deleteNote={deleteNote}
+              openNoteDetails={openNoteDetails}
+            />
           ))}
         </div>
       </div>
+      {isNoteDetailsOpen && (
+        <NoteDetails
+          note={noteToOpen}
+          closeNoteDetails={closeNoteDetails}
+          updateNote={updateNote}
+        />
+      )}
       {isFormOpen && (
         <NoteForm
           closeForm={closeForm}
