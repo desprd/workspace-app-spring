@@ -9,17 +9,25 @@ function ContextProvider({ children }) {
     const stored = localStorage.getItem("username");
     return stored ? stored : null;
   });
+  const [preferences, setPreferences] = useState(() => {
+    const stored = JSON.parse(localStorage.getItem("preferences"));
+    return stored ? stored : null;
+  });
   const [loading, setLoading] = useState(true);
 
   const login = (userData) => {
-    setUsername(userData);
-    localStorage.setItem("username", userData);
+    setUsername(userData.username);
+    setPreferences(userData.preferences);
+    localStorage.setItem("username", userData.username);
+    localStorage.setItem("preferences", JSON.stringify(userData.preferences));
   };
 
   const logout = () => {
     localStorage.removeItem("token");
     localStorage.removeItem("username");
+    localStorage.removeItem("preferences");
     setUsername(null);
+    setPreferences(null);
   };
 
   const verifyUser = async () => {
@@ -35,9 +43,7 @@ function ContextProvider({ children }) {
       });
 
       if (response.status == 200) {
-        const verifiedUser = response.data.username;
-        setUsername(verifiedUser);
-        localStorage.setItem("username", verifiedUser);
+        login(response.data);
       } else {
         logout();
       }
@@ -56,7 +62,7 @@ function ContextProvider({ children }) {
   if (loading) return <div>Loading secure session...</div>;
 
   return (
-    <authContext.Provider value={{ username, login, logout }}>
+    <authContext.Provider value={{ username, login, logout, preferences }}>
       {children}
     </authContext.Provider>
   );

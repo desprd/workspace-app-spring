@@ -20,7 +20,7 @@ function Login() {
       console.log(response);
       if (response.status === 200) {
         localStorage.setItem("token", response.data.token);
-        login(response.data.username);
+        login(response.data);
         navigate("/dashboard");
       } else {
         setErrorMessage(response);

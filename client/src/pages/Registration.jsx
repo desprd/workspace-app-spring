@@ -31,7 +31,7 @@ function Registration() {
       console.log(response);
       if (response.status === 201) {
         localStorage.setItem("token", response.data.token);
-        login(response.data.username);
+        login(response.data);
         navigate("/dashboard");
       } else {
         setErrorMessage(response);
