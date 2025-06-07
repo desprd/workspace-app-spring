@@ -13,7 +13,11 @@ function NoteCard({ note, checkAsDone }) {
           className=" cursor-pointer flex justify-between items-center px-5 py-4"
         >
           <div className="flex gap-5">
-            <img className="w-12 h-12" src="progress.png" alt="" />
+            <img
+              className="w-12 h-12"
+              src={note.status === "ACTIVE" ? "progress.png" : "done.png"}
+              alt=""
+            />
             <div className="flex gap-1 flex-col">
               <p className=" font-bold">{note.title}</p>
               <p className="text-graytext italic">{note.howLongAgoCreated}</p>

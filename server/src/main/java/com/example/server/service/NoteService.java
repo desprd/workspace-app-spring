@@ -69,11 +69,15 @@ public class NoteService {
                 .defaultTitle(defaultTitle)
                 .build();
     }
-    public void changeNoteStatus(int id){
+    public void changeNoteStatus(int id, Authentication authentication){
         try {
+            var user = getUser(authentication);
             Note note = noteRepository.getReferenceById(id);
+            if (!user.getNotes().contains(note)){
+                throw new RuntimeException("User has no access for note with id " + id);
+            }
             note.setStatus(Status.DONE);
-            noteRepository.save(note);  
+            noteRepository.save(note);
         }catch (Exception e){
             throw new RuntimeException("Couldn't change status for note with id " + id);
         }

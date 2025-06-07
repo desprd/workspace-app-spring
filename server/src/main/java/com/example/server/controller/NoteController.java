@@ -39,10 +39,11 @@ public class NoteController {
         }
     }
 
-    @PutMapping("/get/{id}")
-    public ResponseEntity<?> changeNoteStatus(@PathVariable int id){
+    @PutMapping("/change/{id}")
+    public ResponseEntity<?> changeNoteStatus(@PathVariable int id,
+                                              Authentication authentication){
         try {
-            service.changeNoteStatus(id);
+            service.changeNoteStatus(id, authentication);
             return new ResponseEntity<>(HttpStatus.OK);
         }catch (Exception e){
             return new ResponseEntity<>(e.getMessage(), HttpStatus.NOT_FOUND);

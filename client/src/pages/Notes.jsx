@@ -36,7 +36,7 @@ function Notes() {
     const id = note.id;
     try {
       const response = await axios.put(
-        `${API_URL}/note/get/${id}`,
+        `${API_URL}/note/change/${id}`,
         {},
         {
           headers: { Authorization: `Bearer ${token}` },
