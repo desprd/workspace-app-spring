@@ -13,6 +13,7 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDate;
 import java.time.temporal.ChronoField;
@@ -69,6 +70,7 @@ public class NoteService {
                 .defaultTitle(defaultTitle)
                 .build();
     }
+    @Transactional
     public void changeNoteStatus(int id, Authentication authentication){
         try {
             var user = getUser(authentication);
@@ -77,10 +79,33 @@ public class NoteService {
                 throw new RuntimeException("User has no access for note with id " + id);
             }
             note.setStatus(Status.DONE);
-            noteRepository.save(note);
         }catch (Exception e){
             throw new RuntimeException("Couldn't change status for note with id " + id);
         }
+    }
+    @Transactional
+    public void deleteNote(int id, Authentication authentication){
+        try {
+            var user = getUser(authentication);
+            Note note = noteRepository.findById(id).orElseThrow(()-> new RuntimeException("Note was not found "));
+            if (!user.getNotes().contains(note)){
+                throw new RuntimeException("User has no access for note with id " + id);
+            }
+            user.getNotes().remove(note);
+        }catch (Exception e){
+            throw new RuntimeException("Couldn't delete note with id " + id);
+        }
+    }
+
+    @Transactional
+    public void updateNote(int id, NoteRequestDTO request, Authentication authentication){
+        var user = getUser(authentication);
+        Note note = noteRepository.findById(id).orElseThrow(()-> new RuntimeException("Note was not found "));
+        if (!user.getNotes().contains(note)){
+            throw new RuntimeException("User has no access for note with id " + id);
+        }
+        note.setTitle(request.getTitle());
+        note.setContent(request.getContent());
     }
     private User getUser(Authentication authentication){
         UserDetails userDetails = (UserDetails) authentication.getPrincipal();

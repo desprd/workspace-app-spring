@@ -50,4 +50,26 @@ public class NoteController {
         }
     }
 
+    @DeleteMapping("/delete/{id}")
+    public ResponseEntity<?> deleteNote(@PathVariable int id,
+                                              Authentication authentication){
+        try {
+            service.deleteNote(id, authentication);
+            return new ResponseEntity<>(HttpStatus.OK);
+        }catch (Exception e){
+            return new ResponseEntity<>(e.getMessage(), HttpStatus.NOT_FOUND);
+        }
+    }
+    @PutMapping("/update/{id}")
+    public ResponseEntity<?> changeNoteStatus(@PathVariable int id,
+                                              @RequestBody NoteRequestDTO note,
+                                              Authentication authentication){
+        try {
+            service.updateNote(id, note, authentication);
+            return new ResponseEntity<>(HttpStatus.OK);
+        }catch (Exception e){
+            return new ResponseEntity<>(e.getMessage(), HttpStatus.NOT_FOUND);
+        }
+    }
+
 }

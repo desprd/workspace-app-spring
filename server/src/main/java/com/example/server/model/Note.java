@@ -29,7 +29,7 @@ public class Note {
     private Status status;
     @UpdateTimestamp
     private LocalDate createdOn;
-    @ManyToOne
-    @JoinColumn(name = "user_id", referencedColumnName = "id")
-    private User user;
+        @ManyToOne
+        @JoinColumn(name = "user_id", referencedColumnName = "id")
+        private User user;
 }

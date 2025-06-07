@@ -9,6 +9,7 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.Optional;
 
@@ -21,6 +22,7 @@ public class ProfileInformationService {
         var user = getUser(authentication);
         return getProfileDTO(user);
     }
+    @Transactional
     public ProfileDTO updateProfileInformation(Authentication authentication, ProfileRequestDTO req){
         var user = getUser(authentication);
         if (req.getEmail().isEmpty() || req.getEmail()== null){
@@ -32,7 +34,6 @@ public class ProfileInformationService {
         if (req.getProfilePictureFile() != null && !req.getProfilePictureFile().isEmpty()){
             user.getProfile().setProfilePictureURL(cloudinaryService.uploadFile(req.getProfilePictureFile(), "workspace-app/profile-pictures"));
         }
-        repository.save(user);
         return getProfileDTO(user);
     }
     private User getUser(Authentication authentication){
