@@ -9,9 +9,9 @@ function Settings() {
   const [errorMessage, setErrorMessage] = useState("");
   const { preferences } = useAuth();
   const [forecastEnable, setForecastEnable] = useState(
-    preferences.forecastEnable
+    preferences.forecastIsAllowed
   );
-  const [newsEnable, setNewsEnable] = useState(preferences.newsEnable);
+  const [newsEnable, setNewsEnable] = useState(preferences.newsAreAllowed);
   const [city, setCity] = useState(() => {
     const stored = preferences.city;
     return stored != null ? stored : "";
@@ -31,18 +31,22 @@ function Settings() {
     }
   }
   async function savePreferences() {
-    if (city === null || city === "") {
+    if (forecastEnable && (city === null || city === "")) {
       setErrorMessage("Please enter city name");
       return;
     }
     try {
       const response = await axios.put(
-        `${API_URL}/profile/update`,
-        { preferences },
+        `${API_URL}/preferences/update`,
+        {
+          forecastIsAllowed: forecastEnable,
+          newsAreAllowed: newsEnable,
+          city,
+        },
         {
           headers: {
             Authorization: `Bearer ${token}`,
-            "Content-Type": "multipart/form-data",
+            "Content-Type": "application/json",
           },
         }
       );
@@ -50,9 +54,11 @@ function Settings() {
         console.log("Settings updated successfully");
       } else {
         console.log("Updating failed " + response.data);
+        setErrorMessage(response.data);
       }
     } catch (error) {
       console.log("Error " + error);
+      setErrorMessage(error.response.data);
     }
   }
   return (

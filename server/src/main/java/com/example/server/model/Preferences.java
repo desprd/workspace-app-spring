@@ -18,6 +18,8 @@ public class Preferences {
     private Boolean forecastIsAllowed;
     private Boolean newsAreAllowed;
     private String city;
+    private Double latitude;
+    private Double longitude;
     @OneToOne(mappedBy = "preferences")
     private User user;
 }
