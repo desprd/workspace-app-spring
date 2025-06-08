@@ -1,7 +1,15 @@
 package com.example.server.service;
 
+import com.example.server.DTO.WeatherDTO;
+import com.example.server.DTO.WeatherResponseDTO;
+import com.example.server.repository.UserRepository;
+import com.example.server.utils.ForecastUtils;
 import com.fasterxml.jackson.databind.JsonNode;
 import lombok.RequiredArgsConstructor;
+import org.springframework.cache.annotation.Cacheable;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 import org.springframework.web.reactive.function.client.WebClient;
 
@@ -12,6 +20,14 @@ import java.util.List;
 @RequiredArgsConstructor
 public class ForecastService {
     private final WebClient client;
+    private final UserRepository repository;
+    private final ForecastUtils utils;
+    public WeatherResponseDTO getForecast(Authentication authentication){
+        UserDetails userDetails = (UserDetails) authentication.getPrincipal();
+        var user = repository.findByUsername(userDetails.getUsername())
+                .orElseThrow(() -> new UsernameNotFoundException("User with this username not exists"));
+        return utils.getWeather(user.getPreferences().getLatitude(), user.getPreferences().getLongitude(), client);
+    }
     public List<Double> getCoordinates(String cityName) {
         JsonNode jsonNode;
         try {
