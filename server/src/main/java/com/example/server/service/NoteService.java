@@ -1,6 +1,7 @@
 package com.example.server.service;
 
 import com.example.server.DTO.AllNotesDTO;
+import com.example.server.DTO.DashboardNotesDTO;
 import com.example.server.DTO.NoteDTO;
 import com.example.server.DTO.NoteRequestDTO;
 import com.example.server.model.Note;
@@ -16,6 +17,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDate;
+import java.time.LocalTime;
 import java.time.temporal.ChronoField;
 import java.time.temporal.ChronoUnit;
 import java.time.temporal.TemporalField;
@@ -68,6 +70,20 @@ public class NoteService {
         return AllNotesDTO.builder()
                 .allNotes(noteDTOList)
                 .defaultTitle(defaultTitle)
+                .build();
+    }
+    public DashboardNotesDTO getTodayNotes(Authentication authentication){
+        List<NoteDTO> noteDTOList = getAllNotes(authentication)
+                .getAllNotes()
+                .stream()
+                .filter(note -> note
+                        .getHowLongAgoCreated()
+                        .equals("Today"))
+                .toList();
+        String timeOfDay = getTimeOFDay();
+        return DashboardNotesDTO.builder()
+                .todayNotes(noteDTOList)
+                .timeOfDay(timeOfDay)
                 .build();
     }
     @Transactional
@@ -147,5 +163,15 @@ public class NoteService {
             return "More than week ago";
         }
         return "";
+    }
+    private String getTimeOFDay(){
+        long hour = LocalTime.now().getHour();
+        if (hour >= 5 && hour < 12) {
+            return "morning";
+        } else if (hour >= 12 && hour < 17) {
+            return "afternoon";
+        } else{
+            return "evening";
+        }
     }
 }

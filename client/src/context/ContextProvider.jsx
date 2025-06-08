@@ -23,11 +23,12 @@ function ContextProvider({ children }) {
   };
 
   const logout = () => {
+    setUsername(null);
+    setPreferences(null);
     localStorage.removeItem("token");
     localStorage.removeItem("username");
     localStorage.removeItem("preferences");
-    setUsername(null);
-    setPreferences(null);
+    localStorage.clear();
   };
 
   const verifyUser = async () => {

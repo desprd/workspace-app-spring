@@ -1,6 +1,7 @@
 package com.example.server.controller;
 
 import com.example.server.DTO.AllNotesDTO;
+import com.example.server.DTO.DashboardNotesDTO;
 import com.example.server.DTO.NoteDTO;
 import com.example.server.DTO.NoteRequestDTO;
 import com.example.server.service.NoteService;
@@ -33,6 +34,15 @@ public class NoteController {
     public ResponseEntity<?> getAllNotes(Authentication authentication){
         try {
             AllNotesDTO notes = service.getAllNotes(authentication);
+            return new ResponseEntity<>(notes, HttpStatus.OK);
+        }catch (Exception e){
+            return new ResponseEntity<>(e.getMessage(), HttpStatus.BAD_REQUEST);
+        }
+    }
+    @GetMapping("/get/today")
+    public ResponseEntity<?> getNotesToday(Authentication authentication){
+        try {
+            DashboardNotesDTO notes = service.getTodayNotes(authentication);
             return new ResponseEntity<>(notes, HttpStatus.OK);
         }catch (Exception e){
             return new ResponseEntity<>(e.getMessage(), HttpStatus.BAD_REQUEST);
