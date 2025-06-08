@@ -36,7 +36,7 @@ out/
 .DS_Store
 Thumbs.db
 
-# Environment and config files
+application.properties
 .env
 *.properties.local
 application-*.yml
