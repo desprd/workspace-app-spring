@@ -63,7 +63,9 @@ function ContextProvider({ children }) {
   if (loading) return <div>Loading secure session...</div>;
 
   return (
-    <authContext.Provider value={{ username, login, logout, preferences }}>
+    <authContext.Provider
+      value={{ username, login, logout, preferences, verifyUser }}
+    >
       {children}
     </authContext.Provider>
   );

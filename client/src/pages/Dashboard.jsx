@@ -4,21 +4,60 @@ import { useAuth } from "../context/ContextProvider";
 import axios from "axios";
 import NoteCard from "../components/NoteCard";
 import NoteDetails from "../components/NoteDetails";
+import ForecastPanel from "../components/ForecastPanel";
+import NewsCard from "../components/NewsCard";
 
 function Dashboard() {
   const API_URL = import.meta.env.VITE_API_URL;
   const token = localStorage.getItem("token");
-  const { username } = useAuth();
+  const { username, preferences } = useAuth();
   const [timeOfDay, setTimeOfDay] = useState("");
   const [todayNotes, setTodayNotes] = useState([]);
   const [isNoteDetailsOpen, setIsNoteDetailsOpen] = useState(false);
   const [noteToOpen, setNoteToOpen] = useState(null);
+  const [weather, setWeather] = useState(null);
+  const [news, setNews] = useState([]);
   function openNoteDetails(note) {
     setIsNoteDetailsOpen(true);
     setNoteToOpen(note);
   }
   function closeNoteDetails() {
     setIsNoteDetailsOpen(false);
+  }
+  async function getNews() {
+    try {
+      const response = await axios.get(`${API_URL}/news/get`, {
+        headers: {
+          Authorization: `Bearer ${token}`,
+          "Content-Type": "application/json",
+        },
+      });
+      if (response.status === 200) {
+        setNews(response.data);
+      } else {
+        console.log("Failed to fetch news ");
+      }
+    } catch (error) {
+      console.log("Error " + error);
+    }
+  }
+  async function getForecast() {
+    try {
+      const response = await axios.get(`${API_URL}/forecast/get`, {
+        headers: {
+          Authorization: `Bearer ${token}`,
+          "Content-Type": "application/json",
+        },
+      });
+      if (response.status === 200) {
+        console.log("Weather successfully fetched ", response.data.current);
+        setWeather(response.data.current);
+      } else {
+        console.log("Failed to fetch weather " + response.data);
+      }
+    } catch (error) {
+      console.log("Error " + error);
+    }
   }
   async function updateNote(note, noteTitle, content) {
     const id = note.id;
@@ -100,6 +139,12 @@ function Dashboard() {
     }
   }
   useEffect(() => {
+    if (preferences.forecastIsAllowed) {
+      getForecast();
+    }
+    if (preferences.newsAreAllowed) {
+      getNews();
+    }
     fetchUserData();
   }, []);
   return (
@@ -110,7 +155,7 @@ function Dashboard() {
           <h1 className="text-3xl font-extrabold">
             Good {timeOfDay}, {username}
           </h1>
-          <div className="grid grid-cols-[50%_50%] min-h-screen gap-20">
+          <div className="grid grid-cols-[50%_50%] min-h-screen gap-40">
             <div>
               <h2 className="text-graytext text-xl italic">Today notes</h2>
               {todayNotes.map((note) => (
@@ -121,6 +166,16 @@ function Dashboard() {
                   openNoteDetails={openNoteDetails}
                 />
               ))}
+            </div>
+            <div className="flex flex-col gap-10">
+              <div>{weather && <ForecastPanel weather={weather} />}</div>
+              <div className="flex flex-col gap-4">
+                <p className="text-2xl font-bold">Latest news</p>
+                <div>
+                  {news.length > 0 &&
+                    news.map((article) => <NewsCard news={article} />)}
+                </div>
+              </div>
             </div>
           </div>
         </div>

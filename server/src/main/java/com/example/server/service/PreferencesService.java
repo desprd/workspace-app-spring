@@ -33,6 +33,8 @@ public class PreferencesService {
             }catch (Exception e){
                 throw new RuntimeException("Incorrect city name ");
             }
+        }else {
+            user.getPreferences().setForecastIsAllowed(false);
         }
     }
 }

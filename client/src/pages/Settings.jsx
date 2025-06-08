@@ -8,6 +8,7 @@ function Settings() {
   const token = localStorage.getItem("token");
   const [errorMessage, setErrorMessage] = useState("");
   const { preferences } = useAuth();
+  const { verifyUser } = useAuth();
   const [forecastEnable, setForecastEnable] = useState(
     preferences.forecastIsAllowed
   );
@@ -52,6 +53,7 @@ function Settings() {
       );
       if (response.status === 200) {
         console.log("Settings updated successfully");
+        verifyUser();
       } else {
         console.log("Updating failed " + response.data);
         setErrorMessage(response.data);

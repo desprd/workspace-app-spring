@@ -1,8 +1,7 @@
 package com.example.server.controller;
 
-import com.example.server.DTO.WeatherDTO;
-import com.example.server.DTO.WeatherResponseDTO;
-import com.example.server.service.ForecastService;
+import com.example.server.DTO.NewsDTO;
+import com.example.server.service.NewsService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -12,19 +11,21 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import java.util.List;
+
 @RestController
-@RequestMapping("/api/forecast")
+@RequestMapping("/api/news")
 @RequiredArgsConstructor
 @CrossOrigin
-public class ForecastController {
-    private final ForecastService service;
+public class NewsController {
+    private final NewsService service;
     @GetMapping("/get")
-    public ResponseEntity<?> getForecast(Authentication authentication){
+    public ResponseEntity<?> getNews(){
         try {
-            WeatherResponseDTO daily = service.getForecast(authentication);
-            return new ResponseEntity<>(daily, HttpStatus.OK);
+            List<NewsDTO> news = service.getNews();
+            return new ResponseEntity<>(news, HttpStatus.OK);
         }catch (Exception e){
-            return new ResponseEntity<>(e.getMessage(), HttpStatus.NOT_FOUND);
+            return new ResponseEntity<>(e.getMessage(), HttpStatus.BAD_REQUEST);
         }
     }
 }
