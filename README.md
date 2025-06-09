@@ -18,7 +18,7 @@ The server module provides several features:
 
 ## Live Demo
 
-- workspace-app-spring.vercel.app/dashboard
+- https://workspace-app-spring.vercel.app/dashdoard
 
 ### Running the Server
 
