@@ -1,7 +1,5 @@
 # Maven build files
 target/
-!.mvn/wrapper/maven-wrapper.jar
-.mvn/
 pom.xml.tag
 pom.xml.releaseBackup
 pom.xml.versionsBackup
