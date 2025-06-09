@@ -34,7 +34,6 @@ out/
 .DS_Store
 Thumbs.db
 
-application.properties
 .env
 *.properties.local
 application-*.yml
