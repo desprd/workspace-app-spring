@@ -34,6 +34,7 @@ public class User {
     @JoinColumn(name = "profile_id", referencedColumnName = "id")
     protected Profile profile;
     @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true)
+    @Builder.Default
     private List<Note> notes = new ArrayList<>();
     @OneToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
     @JoinColumn(name = "preferences_id", referencedColumnName = "id")
