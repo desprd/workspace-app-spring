@@ -46,7 +46,7 @@ public class AuthenticationController {
         try {
             User userModel = service.getUser(authentication);
             PreferencesDTO preferencesDTO = service.getPreferencesDTO(userModel.getPreferences());
-            return ResponseEntity.ok(UserAuthDTO.builder().username(userModel.getUsername()).preferences(preferencesDTO).build()); // or include email if needed
+            return ResponseEntity.ok(UserAuthDTO.builder().username(userModel.getUsername()).preferences(preferencesDTO).build());
         } catch (Exception e) {
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Invalid token");
         }
